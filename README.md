@@ -22,16 +22,18 @@ the CUPS library that ships with macOS.
 
 - Printer: TSP143 with cutter, over USB (`0519:0003`, IEEE 1284 ID
   `MFG:Star;CMD:STAR;MDL:TSP143 (STR_T-001)`).
-- Tested on macOS 26 on Apple Silicon, printing real receipts. The Intel half
-  of the binary gives the same output when run through Rosetta; it has not
-  been tried on an Intel Mac. Built for macOS 11 or later.
+- Tested on macOS 26 on Apple Silicon, printing real receipts, including on
+  a freshly erased Mac without Rosetta. The Intel half of the binary gives the
+  same output when run through Rosetta; it has not been tried on an Intel
+  Mac. Built for macOS 11 or later.
 - The output is byte-for-byte identical to the legacy driver's in 35 test
   cases (see [How it was tested](#how-it-was-tested)).
 
 ## Install
 
 Download the installer package from the [Releases](../../releases) page and
-open it. It installs:
+open it. The package is signed with a Developer ID and notarized by Apple.
+It installs:
 
 - the filter, the PPD and an uninstaller in `/Library/Printers/rastertostarn`
 - a copy of the PPD in `/Library/Printers/PPDs/Contents/Resources`, where
@@ -39,9 +41,10 @@ open it. It installs:
 
 If the printer is already set up on the Mac, its print queue is switched to
 this driver. If it is plugged in and not set up yet, a queue named
-`Star_TSP143` is created. Otherwise, plug the printer in and add it in
-System Settings > Printers & Scanners; if macOS does not pick the driver by
-itself, choose "Star TSP143 native" under Use > Select Software.
+`Star_TSP143` is created. If it is plugged in later, macOS 26 adds it by
+itself with this driver, under a name like `Star_TSP143__STR_T_001_`; if it
+does not, add the printer in System Settings > Printers & Scanners and choose
+"Star TSP143 native" under Use > Select Software.
 
 ### From source
 
@@ -61,7 +64,8 @@ to leave them.
 
 Receipts are 72 mm wide (576 dots at 203 dpi) and as long as their content:
 the driver does not send the blank lines at the end of a page, and it cuts at
-the end of the document.
+the end of the document. With the name of your print queue (`lpstat -e` lists
+them):
 
     lp -d Star_TSP143 -o PageSize=Custom.204x400 receipt.pdf
 
