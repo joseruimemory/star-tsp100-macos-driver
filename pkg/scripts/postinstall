@@ -1,0 +1,46 @@
+#!/bin/bash
+# Runs as root once the files are in /Library/Printers/rastertostarn, from the
+# installer package or from install.sh.
+#
+# 1. Puts a copy of the PPD where macOS looks for printer drivers, so the
+#    printer gets this driver by itself when it is plugged in or added.
+# 2. Points the existing print queues of a USB-attached TSP143 at the driver;
+#    with the printer attached and no queue yet, creates one.
+#
+# It never fails the installation: a queue can always be added by hand in
+# System Settings > Printers & Scanners.
+export LC_ALL=C LANG=C PATH=/usr/bin:/bin:/usr/sbin:/sbin
+HOME_DIR=/Library/Printers/rastertostarn
+FILTER=$HOME_DIR/rastertostarn
+PPD=$HOME_DIR/tsp143n.ppd
+DRIVERS=/Library/Printers/PPDs/Contents/Resources
+[ -f "$PPD" ] && [ -x "$FILTER" ] || exit 0
+
+[ -d "$DRIVERS" ] || install -d -o root -g admin -m 755 "$DRIVERS"
+if gzip -9 -n -c "$PPD" > "$DRIVERS/tsp143n.ppd.gz"; then
+  chown root:wheel "$DRIVERS/tsp143n.ppd.gz"
+  chmod 644 "$DRIVERS/tsp143n.ppd.gz"
+fi
+
+queues=0
+while IFS= read -r line; do
+  # "device for <queue>: usb://Star/TSP143%20(STR_T-001)?location=..."
+  queue=${line#device for }
+  queue=${queue%%: *}
+  queues=$((queues + 1))
+  if grep -q "^\*cupsFilter:.*$FILTER\"" "/etc/cups/ppd/$queue.ppd" 2>/dev/null; then
+    echo "postinstall: queue $queue already uses the native driver"
+  elif lpadmin -p "$queue" -P "$PPD" 2>/dev/null; then
+    echo "postinstall: queue $queue now uses the native driver"
+  else
+    echo "postinstall: could not switch queue $queue"
+  fi
+done < <(lpstat -v 2>/dev/null | grep -E ': usb://Star/TSP143')
+
+if [ "$queues" -eq 0 ]; then
+  uri=$(lpinfo --include-schemes usb -v 2>/dev/null | awk '$2 ~ /^usb:\/\/Star\/TSP143/ { print $2; exit }')
+  if [ -n "$uri" ] && lpadmin -p Star_TSP143 -E -v "$uri" -P "$PPD" -D "Star TSP143" 2>/dev/null; then
+    echo "postinstall: created queue Star_TSP143"
+  fi
+fi
+exit 0

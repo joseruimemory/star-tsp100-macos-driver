@@ -1,0 +1,4 @@
+rastertostarn
+dist/
+*.dSYM
+.DS_Store
