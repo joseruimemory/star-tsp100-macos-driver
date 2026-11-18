@@ -22,11 +22,15 @@ if gzip -9 -n -c "$PPD" > "$DRIVERS/tsp143n.ppd.gz"; then
   chmod 644 "$DRIVERS/tsp143n.ppd.gz"
 fi
 
+# The queue names come from "lpstat -e" and each device URI from "lpoptions":
+# "lpstat -v" would be shorter, but macOS prints it in the user's language.
 queues=0
-while IFS= read -r line; do
-  # "device for <queue>: usb://Star/TSP143%20(STR_T-001)?location=..."
-  queue=${line#device for }
-  queue=${queue%%: *}
+for queue in $(lpstat -e 2>/dev/null); do
+  uri=$(lpoptions -p "$queue" 2>/dev/null | tr ' ' '\n' | sed -n 's/^device-uri=//p' | head -1)
+  case "$uri" in
+    usb://Star/TSP143*) ;;
+    *) continue ;;
+  esac
   queues=$((queues + 1))
   if grep -q "^\*cupsFilter:.*$FILTER\"" "/etc/cups/ppd/$queue.ppd" 2>/dev/null; then
     echo "postinstall: queue $queue already uses the native driver"
@@ -35,7 +39,7 @@ while IFS= read -r line; do
   else
     echo "postinstall: could not switch queue $queue"
   fi
-done < <(lpstat -v 2>/dev/null | grep -E ': usb://Star/TSP143')
+done
 
 if [ "$queues" -eq 0 ]; then
   uri=$(lpinfo --include-schemes usb -v 2>/dev/null | awk '$2 ~ /^usb:\/\/Star\/TSP143/ { print $2; exit }')
