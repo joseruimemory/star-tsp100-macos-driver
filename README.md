@@ -1,4 +1,4 @@
-# tsp100-macos-driver
+# star-tsp100-macos-driver
 
 A native macOS driver for the **Star TSP143** receipt printer (the original
 TSP100 "futurePRNT" series, released in 2005). It runs on Apple Silicon and

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds the installer package: dist/tsp100-macos-driver-<version>.pkg
+# Builds the installer package: dist/star-tsp100-macos-driver-<version>.pkg
 #
 # The package only owns /Library/Printers/rastertostarn; its postinstall
 # script copies the PPD into the system's driver folder, so the package never
@@ -13,7 +13,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 ID=io.github.joseruimemory.rastertostarn
-NAME=tsp100-macos-driver
+NAME=star-tsp100-macos-driver
 VERSION=$(sed -n 's/^#define VERSION  *"\(.*\)".*/\1/p' rastertostarn.c)
 [ -n "$VERSION" ] || { echo "no VERSION in rastertostarn.c"; exit 1; }
 
