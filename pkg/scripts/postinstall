@@ -7,6 +7,8 @@
 # 2. Points the existing print queues of a USB-attached TSP143 at the driver;
 #    with the printer attached and no queue yet, creates one.
 #
+# 3. Puts the uninstaller where people look for it: Applications > Utilities.
+#
 # It never fails the installation: a queue can always be added by hand in
 # System Settings > Printers & Scanners.
 export LC_ALL=C LANG=C PATH=/usr/bin:/bin:/usr/sbin:/sbin
@@ -20,6 +22,14 @@ DRIVERS=/Library/Printers/PPDs/Contents/Resources
 if gzip -9 -n -c "$PPD" > "$DRIVERS/tsp143n.ppd.gz"; then
   chown root:wheel "$DRIVERS/tsp143n.ppd.gz"
   chmod 644 "$DRIVERS/tsp143n.ppd.gz"
+fi
+
+UNINSTALLER="Uninstall Star TSP100 Driver.app"
+if [ -d "$HOME_DIR/$UNINSTALLER" ] && [ -d /Applications/Utilities ]; then
+  rm -rf "/Applications/Utilities/$UNINSTALLER"
+  if ditto "$HOME_DIR/$UNINSTALLER" "/Applications/Utilities/$UNINSTALLER"; then
+    echo "postinstall: uninstaller is in Applications > Utilities"
+  fi
 fi
 
 # The queue names come from "lpstat -e" and each device URI from "lpoptions":

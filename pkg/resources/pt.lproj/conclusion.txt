@@ -1,0 +1,7 @@
+O driver está instalado.
+
+Para experimentar: abra um documento qualquer, escolha Ficheiro > Imprimir, seleccione a Star TSP143 e imprima.
+
+Se a impressora não estiver na lista, ligue-a por USB e espere uns segundos. Se continuar sem aparecer, adicione-a em Definições do Sistema > Impressoras e Scanners e escolha «Star TSP143 native» em Usar > Seleccionar software.
+
+Para remover o driver: abra «Uninstall Star TSP100 Driver», em Aplicações > Utilitários.

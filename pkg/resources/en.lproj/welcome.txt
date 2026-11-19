@@ -1,0 +1,11 @@
+This installs a driver for the Star TSP143 receipt printer (the original TSP100 series, USB). It runs on Apple Silicon and Intel Macs, without Rosetta.
+
+What happens next:
+
+  •  If the printer is already set up on this Mac, it starts using this driver.
+  •  If it is plugged in and not set up yet, it is added, with the name Star TSP143.
+  •  If you plug it in later, macOS adds it by itself.
+
+To remove the driver one day, open "Uninstall Star TSP100 Driver", in Applications > Utilities. No Terminal needed.
+
+This project is not affiliated with Star Micronics.

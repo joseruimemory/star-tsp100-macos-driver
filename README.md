@@ -31,34 +31,64 @@ the CUPS library that ships with macOS.
 
 ## Install
 
-Download the installer package from the [Releases](../../releases) page and
-open it. The package is signed with a Developer ID and notarized by Apple.
-It installs:
+No Terminal needed.
 
-- the filter, the PPD and an uninstaller in `/Library/Printers/rastertostarn`
+1. Download **star-tsp100-macos-driver-1.2.0.pkg** from the
+   [Releases](../../releases) page.
+2. Open it and follow the installer. It asks for the password of the Mac.
+3. Plug the printer in by USB, if it is not already.
+
+That is all. The printer is now in the print dialog of every app, as
+**Star TSP143**. The installer is in English and Portuguese, signed with a
+Developer ID and notarized by Apple, so macOS opens it without warnings.
+
+What the installer does with the printer:
+
+- already set up on the Mac: it starts using this driver;
+- plugged in but not set up: it is added, with the name `Star_TSP143`;
+- plugged in later: macOS 26 adds it by itself, under a name like
+  `Star_TSP143__STR_T_001_`. If it does not, add the printer in System
+  Settings > Printers & Scanners and choose "Star TSP143 native" under
+  Use > Select Software.
+
+## Uninstall
+
+Open **Uninstall Star TSP100 Driver**, in Applications > Utilities (or look
+for it with Spotlight). It says what it will remove, asks for the password of
+the Mac and removes the driver. The printers that use the driver are removed
+too, because they cannot print without it.
+
+If the app is gone, download it again from the
+[Releases](../../releases) page: it also runs from the Downloads folder.
+
+## For the curious
+
+What is installed, and where:
+
+- the filter, the PPD, `uninstall.sh` and a copy of the uninstaller app, in
+  `/Library/Printers/rastertostarn`
 - a copy of the PPD in `/Library/Printers/PPDs/Contents/Resources`, where
   macOS looks for printer drivers
+- the uninstaller app, in `/Applications/Utilities`
 
-If the printer is already set up on the Mac, its print queue is switched to
-this driver. If it is plugged in and not set up yet, a queue named
-`Star_TSP143` is created. If it is plugged in later, macOS 26 adds it by
-itself with this driver, under a name like `Star_TSP143__STR_T_001_`; if it
-does not, add the printer in System Settings > Printers & Scanners and choose
-"Star TSP143 native" under Use > Select Software.
+The uninstaller app is a window for `uninstall.sh`, which can also be run
+from Terminal:
+
+    sudo /Library/Printers/rastertostarn/uninstall.sh
+
+`--keep-queues` leaves the print queues alone, `--dry-run` only says what
+would be removed.
 
 ### From source
 
 Needs the Xcode command line tools.
 
     ./build.sh
+    ./make_uninstaller.sh     # optional: the uninstaller app
     sudo ./install.sh
 
-### Uninstall
-
-    sudo /Library/Printers/rastertostarn/uninstall.sh
-
-This also removes the print queues that use the driver; add `--keep-queues`
-to leave them.
+`./make_pkg.sh` builds the installer package; its first lines say how to
+sign and notarize it.
 
 ## Printing
 

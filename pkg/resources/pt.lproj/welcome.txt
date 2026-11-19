@@ -1,0 +1,11 @@
+Isto instala um driver para a impressora de talões Star TSP143 (a série TSP100 original, por USB). Funciona em Macs com Apple Silicon e com Intel, sem o Rosetta.
+
+O que acontece a seguir:
+
+  •  Se a impressora já estiver configurada neste Mac, passa a usar este driver.
+  •  Se estiver ligada e ainda não configurada, é adicionada, com o nome Star TSP143.
+  •  Se a ligar mais tarde, o macOS adiciona-a sozinho.
+
+Para remover o driver um dia, abra «Uninstall Star TSP100 Driver», em Aplicações > Utilitários. Não é preciso o Terminal.
+
+Este projecto não tem ligação à Star Micronics.

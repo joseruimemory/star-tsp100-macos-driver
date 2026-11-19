@@ -57,7 +57,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define VERSION        "1.1.0"
+#define VERSION        "1.2.0"
 #define MAX_LINE_BYTES 72           /* 576 dots: the width of the print head */
 
 static volatile sig_atomic_t cancelled = 0;

@@ -13,5 +13,11 @@ cupstestppd -q tsp143n.ppd || { echo "tsp143n.ppd does not pass cupstestppd"; ex
 install -d -o root -g wheel -m 755 /Library/Printers/rastertostarn
 install -o root -g wheel -m 755 rastertostarn uninstall.sh /Library/Printers/rastertostarn/
 install -o root -g wheel -m 644 tsp143n.ppd /Library/Printers/rastertostarn/
+# The uninstaller app, when it has been built (./make_uninstaller.sh).
+if [ -d "dist/Uninstall Star TSP100 Driver.app" ]; then
+  rm -rf "/Library/Printers/rastertostarn/Uninstall Star TSP100 Driver.app"
+  ditto "dist/Uninstall Star TSP100 Driver.app" "/Library/Printers/rastertostarn/Uninstall Star TSP100 Driver.app"
+  chown -R root:wheel "/Library/Printers/rastertostarn/Uninstall Star TSP100 Driver.app"
+fi
 pkg/scripts/postinstall
 echo "Installed rastertostarn $(sed -n 's/^#define VERSION  *"\(.*\)".*/\1/p' rastertostarn.c)."
